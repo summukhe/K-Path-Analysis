@@ -1,0 +1,145 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\title{$k$-Paths Analysis}
+\author{{Sumanta Mukherjee} \and {Sunaina Banerjee}}
+\date{October 2018}
+
+\begin{document}
+
+\maketitle
+
+\section{Terms \& definitions}
+\subsection{Basic graph notations}\label{sec:notation}
+Let consider a scenario described  by a network $G(V,\mathcal{E},\phi)$, where, $V$ is the number of vertices in the graph, $E$ represents the edge set, $\mathcal{E} \subseteq V(G)\times V(G)$. $\phi$ is the weight associated with the edge set. For each $e \in \mathcal{E}(G)$, $\phi$ maps the relationship to a real number value, called weights, i.e. $\phi(e) \mapsto \mathbf{R}^{+}$. We only consider positive weights.
+
+\subsection{Path in a graph ($G$)}\label{sec:path}
+An edge is defined between a vertex pair, $e = \lbrace u, v \rbrace \,\text{where},\, u,v\in V(G)$. Two edges are adjacent, if they have a common vertex. A path between any two vertices $u$, and $v$ $\mathbf{P}(u,v \vert G)$, is defined as a ordered sequence of adjacent edges that starts at $u$, and ends with $v$, and every vertex in the sequence is visited only once. There can be many paths between vertex $u$ and $v$, depending on the graph topology. Let, $\mathcal{P}(u,v\vert G)$ represents set of all possible path between $u$, and $v$ in a graph $G$. If between any two pair of vertex, there exist a unique path, then the graph is a tree.
+
+\subsection{Path weight \& shortest path}\label{sec:short}
+Path weight for a path $w(\mathbf{P}(u,v\vert G))$, in the graph $G$, is defined as 
+\begin{equation*}
+     w(\mathbf{P}(u, v \vert G) ) = \sum_{e \in \mathbf{P}} \phi(e)
+\end{equation*}
+A shortest path between any vertex pair ($u$, $v$) in a graph is path with least path weights ($\Phi(u,v\vert G.\phi)$).
+\begin{equation*}
+    \sigma(u,v\vert G.\phi) = \min_{P \in \mathcal{P}(u,v\vert G)} w(P)
+\end{equation*}
+
+\subsection{Path similarity score ($\eta(\mathbf{P}_i, \mathbf{P}_j)$) }\label{sec:pathsim}
+We define a metric, to suggest distance between any two paths $\mathbf{P}_{1}$, and $\mathbf{P}_2$ as, 
+\begin{equation*}
+    \eta(\mathbf{P}_1, \mathbf{P}_2) = 1 - \dfrac{\mathbf{P}_1\cap\mathbf{P}_2}{\mathbf{P}_1\cup\mathbf{P}_2}
+\end{equation*}
+A distance between two idempotent path is $0$, while between two completely disjoint path is $1$. 
+
+\subsection{Path disjoint score $\alpha_{\mathcal{P}}$}\label{sec:disjscore}
+So given a set of paths $\mathcal{P}^{o}(u,v \vert G)$, the disjoint score between the paths ($\alpha_{\mathcal{P}^{o}}$) is defined as 
+\begin{equation*}
+    \alpha_{\mathcal{P}^{o}} = \min_{\mathbf{P}_i, \mathbf{P}_j \in \mathcal{P}^{o}} \eta(\mathbf{P}_i, \mathbf{P}_j)
+\end{equation*}
+Therefore, higher the value of $\alpha_{\mathcal{P}^o}$, suggests paths are more disjoint. It must be noted that the value of $\alpha_{\mathcal{P}}$, is always bounded between $(0, 1)$. 
+
+\subsection{Communication efficiency score $\epsilon(\mathcal{P})$}\label{sec:eff}
+For a set of $k$-paths between vertex pair $u$, and $v$ in a graph $G$, $\mathcal{P}_{k}(u,v\vert G)$, we therefore define a measure of the communication efficiency as 
+\begin{equation*}
+  \epsilon( \mathcal{P}_{k} ) = \dfrac{\sum_{\mathbf{P}\in \mathcal{P}_k} w(\mathbf{P}) }{ \vert\mathcal{P}_k\vert \cdot \eta_{\mathcal{P}_{k}}}    
+\end{equation*}
+This measure decreases with increase of disjoint paths in the set, and lower path weights. Thus we define $k$-shortest paths between any vertex pair $u$, $v$, as the set of paths that minimizes the score $\epsilon(\mathcal{P}_k)$, where $\mathcal{P}_k \subset \mathcal{P}(u,v\vert G,\phi)$. 
+
+\subsection{$k$-paths definition $\mathcal{K}_k(u,v\vert G,\phi)$}\label{sec:kpaths}
+For any given graph $G(V,\mathcal{E})$, we define k-paths ($\mathcal{K}_{k}(u,v \vert G, \phi)$) as a set of paths between any to vertex $u$ and $v$; such that $\mathcal{K}_k(u,v\vert G,\phi)$ comprises of at-most $k$ distinct path, and minimizes communication efficiency score $\epsilon(\mathcal{K}_k)$. This suggests the set $\mathcal{K}_k$, is a weakly maximal set, replacement of any new paths in the set with a different path will results in increase in the communication efficiency  score, $\epsilon(\mathcal{K}_k)$.
+\begin{equation*}
+    \mathcal{K}_k(u,v\vert G,\phi) = \min_{\mathcal{P}_k \subseteq \mathcal{P}(u,v\vert G)} \epsilon(\mathcal{P}_k)
+\end{equation*}
+The definition of $k$-paths is sensitive to the choice of weights $\phi$. Number of distinct paths in a k-path set can at-most be $k$, e.g., evaluating $k$-paths on a tree is simply equivalent to finding shortest path, or unique path from any pair of vertices.
+\par
+Often in a routing of network communication scenario, shortest path is not the only path of choice through which two vertices can communicate. Often shortest paths are degenerated, i.e., there are multiple paths which are probable shortest path candidate (with same/similar path weights). Discovery of more number of communication path leads to design fault-tolerant communication. In this work we have defined the $k$-paths definition carefully, which balances between path weights, and path non-redundancy by minimizing path overlap, to derive top $k$ paths. 
+\par
+\begin{footnotesize}
+\textcolor{blue}{In situation of protein residue contact graph, multiple paths between residues communication robustness. If the paths are of short lengths, that often refers to the structural rigidity. If the network represents dynamic contact network, these paths may explain alternate communicate pathways which is tolerant to structural dynamics. In biology, nature explores all possible paths, therefore $k$-path analysis is essential in defining robust communication channel.}
+\end{footnotesize}
+
+
+\subsection{$k$-paths betweenness centrality $\Gamma(w\vert G,\phi)$}\label{sec:btwcent}
+Concept of betweenness centrality can be easily extended for $k$-paths scenario, where the measure of betweenness centrality of any vertex in the graph ($G$) is defined as the number of $k$-paths in which the vertex has appeared, over total number of $k$-paths. Unlike shortest path, $k$ paths between two residues $u$, $v$ all are not equal contributor to communication strength. To address the same betweenness centrality calculation in $k$-paths scenario is an weighted contributions of each residue. If a vertex $w$ is a member of path $\mathbf{P}$, which is a member of $k$-paths $\mathcal{K}_k(u,v\vert G,\phi)$. Then the contribution of the vertex in betweenness centrality calculation is given as 
+
+\begin{equation*}
+    \theta(w \vert \mathbf{P}, \mathcal{K}_k(u,v\vert G,\phi)) = \frac{ \sigma(u,v\vert G, \phi) + 1 }{ w(\mathbf{P}) + 1 }
+\end{equation*}
+
+It must be noted, the betweenness contribution score is upper bounded by $1$. The constant addition to numerator and denominator is to avoid numerical instability in the calculation of the contribution score $\theta$. The total betweenness centrality thus defined as,
+
+\begin{equation*}
+    \Gamma(w \vert G, \phi) = \dfrac{\sum_{u,v \in V(G)} \sum_{\mathbf{P}\in \mathcal{K}_k(u,v\vert G,\phi)} \theta(w \vert \mathbf{P}, \mathcal{K}_k(u,v\vert G,\phi))}{ \sum_{u,v \in V(G)} \sum_{\mathbf{P}\in \mathcal{K}_k(u,v\vert G,\phi)} \mathbf{1} }
+\end{equation*}
+
+With increasing $k$ value this metric measures information diffusion contribution of a particular residue $u$ in the network $G$. 
+
+\subsection{Conditional betweenness $\Gamma_{X,Y}(w \vert G, \phi)$}
+In this measure instead of evaluating over the entire graph $G$, we define centrality only in context of two disjoint sets of vertices, $X$, and $Y$, where, $X \subset V(G)$, $Y \subset V(G)$, and $X \cap Y = \emptyset$. 
+\begin{equation*}
+    \Gamma_{X,Y}(w \vert G, \phi) = \dfrac{\sum_{u \in X} \sum_{v \in Y} \sum_{\mathbf{P}\in \mathcal{K}_k(u,v\vert G,\phi)} \theta(w \vert \mathbf{P}, \mathcal{K}_k(u,v\vert G,\phi))}{ \sum_{u \in X} \sum_{v \in Y} \sum_{\mathbf{P}\in \mathcal{K}_k(u,v\vert G,\phi)} \mathbf{1} }
+\end{equation*}
+This measure is particularly important to define the contribution of graph vertices in a between vertex cluster communication. 
+
+\subsection{Differential contribution $\mu^{X,Y}_{a \rightarrow v}(w \vert G,\phi)$}
+Conditional betweenness provide us a measure of vertex contribution to the inter-vertex-group communication. Yet, the analysis does not involve disruptive causation, e.g., what if one vertex is removed from the network, or it's associated edge contribution is attenuated or amplified. In order to perform the same analysis we model it using a generic mathematical framework. Let, each vertex ($v$) has a tag/color associated with it, $c_{v}$. $\phi$ assigns a weight to the edges as a function of the vertex types associated with vertex pair of a corresponding edge $e = \lbrace u, v \rbrace $, i.e., $\phi(e) \equiv \bar{\phi}(c_u, c_v)$.
+\par
+Let assume $\Delta^{a}_{v}(G)$ refers to a modification in the vertex set $V(G)$. The change is simply assigning the vertex type $a$ to the vertex $v$. This will lead to a change in the weight values across the edges. For consistent representation, $\phi$ represents a function to assign weights to each edge of the graph $G$. Our perturbation model does not modify $\phi$, but changes associated vertex tag with a vertex. Let, $\Gamma_{X,Y}(w\vert G, \phi)$, and $\Gamma_{X,Y}( w \vert \Delta^{a}_{v}(G))$, are the respective conditional betweenness of a vertex $w$, prior and post network perturbation $\Delta^{a}_{v}$.
+\par
+We define a measure of differential effect of a vertex in inter-group communication as 
+\begin{equation*}
+    \mu^{X,Y}_{a\rightarrow v}(w \vert G, \phi) = \dfrac{\Gamma_{X,Y}( w \vert \Delta^{a}_{v}(G)) - \Gamma_{X,Y}(w\vert G, \phi)}{ \Gamma_{X,Y}(w\vert G, \phi) }
+\end{equation*}
+The differential contribution can be $+$ive or $-$ive. It must be noted that differential contribution is a point measure at vertex $w$. It is a function of $G$, $\phi$, $a$, $X$, and $Y$. 
+
+\subsection{Influence sphere, $\mathcal{I}^{+}_{a\rightarrow v}(\rho \vert G,\phi)$}\label{sec:inflsph}
+Differential contribution captures the effect of a point perturbation on inter-group communication in a network. Thus, for each perturbation, and for given a vertex group definition $X$, and $Y$, we can order each vertex by their differential contribution score. We partition the set of vertices into three group, $V^{+}_{a\rightarrow w}$, $V^{-}_{a\rightarrow w}$, and $V^{0}_{a\rightarrow w}$, viz., vertex with enhanced efficiency, vertex with impaired efficiency, and unaffected vertex set. A small value of $\delta$ is used to define the unaffected vertex set.
+\begin{eqnarray*}
+    V^{0}_{a\rightarrow v} & = & \lbrace w:  -\delta \leq \mu^{X,Y}_{a \rightarrow v}(w \vert G,\phi) \leq \delta \rbrace  \\
+    V^{+}_{a\rightarrow v} & = & \lbrace w:  \mu^{X,Y}_{a \rightarrow v}(w \vert G,\phi) > \delta \rbrace  \\
+    V^{-}_{a\rightarrow v} & = & \lbrace w:  \mu^{X,Y}_{a \rightarrow v}(w \vert G,\phi) < -\delta \rbrace  \\
+\end{eqnarray*}
+Influence sphere is a specific way of sub-setting vertex pair by their differential contribution score. Influence sphere can be positive or negative. Positive influence sphere with a radius $\rho$, is the collection of vertices where differential contribution score is greater than $\rho$. Similarly negative influence sphere is the collection of vertices, for which the differential contribution score is less than $-\rho$.
+\begin{equation*}
+    \mathcal{I}^{+}_{a\rightarrow v}(\rho \vert G,\phi) = \Big\lbrace w : \mu^{X,Y}_{a \rightarrow v}(w \vert G,\phi) \geq \rho, w \in V(G),\; w \neq v,\; w \notin X,Y \Big\rbrace
+\end{equation*}
+\begin{equation*}
+    \mathcal{I}^{-}_{a\rightarrow v}(\rho \vert G,\phi) = \Big\lbrace w : \mu^{X,Y}_{a \rightarrow v}(w \vert G,\phi) \leq -\rho, w \in V(G),\; w \neq v,\; w \notin X,Y \Big\rbrace
+\end{equation*}
+
+\subsection{Influence score, $\Lambda_{+}(a\rightarrow v\vert G, \phi)$}\label{sec:infscore}
+Influence sphere is a step-by-step recipe for marking vertices whose differential scores are over/below a threshold($\rho$). Thus for every network perturbation, it provides two maps between $\rho \mapsto \vert \mathcal{I}^{+}_{a\rightarrow v}\vert$, and $\rho \mapsto \vert \mathcal{I}^{-}_{a\rightarrow v} \vert$.
+\par
+Influence score is an unique measure to capture effect of a network perturbation to between vertex group communication. It is defined as the area under the curve as defined by the influence sphere $\mathcal{I}^{+}_{a\rightarrow v}$, and $\mathcal{I}^{-}_{a\rightarrow v}$
+\begin{equation*}
+    \Lambda_{+}(a\rightarrow v\vert G, \phi) = \int^{\infty}_{\delta} \vert \mathcal{I}^{+}_{a\rightarrow v}(\rho\vert G,\phi)\vert\cdot d(\rho)
+\end{equation*}
+
+\begin{equation*}
+    \Lambda_{-}(a\rightarrow v\vert G, \phi) = \int^{-\delta}_{-\infty} \vert \mathcal{I}^{-}_{a\rightarrow v}(\rho\vert G,\phi)\vert \cdot d(\rho)
+\end{equation*}
+
+If, $\Lambda_{+}(a\rightarrow v) > \Lambda_{-}(a\rightarrow v)$, suggests the mutation enhances overall network communication. While $\Lambda_{+}(a\rightarrow v) < \Lambda_{-}(a\rightarrow v)$, suggests otherwise. In must be noted that higher $\Lambda_{+})(a\rightarrow v)$ value suggests, more number of vertices are positively influenced by the network perturbation, similarly higher $\Lambda_{-}(a\rightarrow v)$ suggests more number of vertices communication efficiency are negatively impacted.
+
+\subsection{Network perturbation effect comparison}
+Each $\Delta^{a\rightarrow v}$, leads to different $\mathcal{I}^{+}_{a\rightarrow v}$, and $\mathcal{I}^{-}_{a\rightarrow v}$ measures. The influence sphere is defined a set of vertices, controlled by the threshold score $\rho$. For any given $\rho$, given two distinct perturbation $\Delta^{a\rightarrow v}$, and $\Delta^{b\rightarrow u}$. A distance measure can be defined as 
+\begin{equation*}
+    \lambda_{+}( \Delta^{a\rightarrow v}, \Delta^{b\rightarrow u} \vert \rho, G, \phi) = \dfrac{\mathcal{I}^{+}_{a\rightarrow v}(\rho \vert G, \phi) \Delta \mathcal{I}^{+}_{b\rightarrow u}(\rho \vert G, \phi)}{\mathcal{I}^{+}_{a\rightarrow v}(\rho \vert G, \phi) \cup \mathcal{I}^{+}_{b\rightarrow u}(\rho \vert G, \phi)}
+\end{equation*}
+\begin{equation*}
+    \lambda_{-}( \Delta^{a\rightarrow v}, \Delta^{b\rightarrow u} \vert \rho, G, \phi) = \dfrac{\mathcal{I}^{-}_{a\rightarrow v}(\rho \vert G, \phi) \Delta \mathcal{I}^{-}_{b\rightarrow u}(\rho \vert G, \phi)}{\mathcal{I}^{-}_{a\rightarrow v}(\rho \vert G, \phi) \cup \mathcal{I}^{-}_{b\rightarrow u}(\rho \vert G, \phi)}
+\end{equation*}
+
+$\lambda_{+}$ is $0$, when both $\mathcal{I}^{+}_{a\rightarrow v}$, and $\mathcal{I}^{+}_{b\rightarrow u}$, are exactly same, and $1$ when they are very distinct. $\lambda_{+}$, and $\lambda_{-}$ are two distinct distance measure. A symmetric distance measure can be defined by taking the maximum of two values.
+\begin{equation*}
+    \lambda_{s}(\Delta^{a\rightarrow v}, \Delta^{b\rightarrow u}\vert \rho, G, \phi) = \max (\lambda_{+}( \Delta^{a\rightarrow v}, \Delta^{b\rightarrow u} \vert \rho) , \lambda_{-}( \Delta^{a\rightarrow v}, \Delta^{b\rightarrow u} \vert \rho) )
+\end{equation*}
+$\lambda_{s}$ is a point measure for a given $\rho$ value. For different $\rho$ value is produces different result, as the definition of influence sphere changes as a function of $\rho$. Thus the distance between perturbation is deined as 
+\begin{equation*}
+    \lambda(\Delta^{a\rightarrow v}, \Delta^{b\rightarrow u}\vert G,\phi) = \max_{\rho} \lambda_{s}(\Delta^{a\rightarrow v}, \Delta^{b\rightarrow u}\vert \rho, G, \phi)
+\end{equation*}
+
+\end{document}
