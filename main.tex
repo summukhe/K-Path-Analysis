@@ -122,10 +122,12 @@ Influence score is an unique measure to capture effect of a network perturbation
     \Lambda_{-}(a\rightarrow v\vert G, \phi) = \int^{-\delta}_{-\infty} \vert \mathcal{I}^{-}_{a\rightarrow v}(\rho\vert G,\phi)\vert \cdot d(\rho)
 \end{equation*}
 
-If, $\Lambda_{+}(a\rightarrow v) > \Lambda_{-}(a\rightarrow v)$, suggests the mutation enhances overall network communication. While $\Lambda_{+}(a\rightarrow v) < \Lambda_{-}(a\rightarrow v)$, suggests otherwise. In must be noted that higher $\Lambda_{+})(a\rightarrow v)$ value suggests, more number of vertices are positively influenced by the network perturbation, similarly higher $\Lambda_{-}(a\rightarrow v)$ suggests more number of vertices communication efficiency are negatively impacted.
+If, $\Lambda_{+}(a\rightarrow v) > \Lambda_{-}(a\rightarrow v)$, suggests the mutation enhances overall network communication. While $\Lambda_{+}(a\rightarrow v) < \Lambda_{-}(a\rightarrow v)$, suggests otherwise. In must be noted that higher $\Lambda_{+})(a\rightarrow v)$ value suggests, more number of vertices are positively influenced by the network perturbation, similarly higher $\Lambda_{-}(a\rightarrow v)$ suggests more number of vertices communication efficiency are negatively affected.
 
 \subsection{Network perturbation effect comparison}
-Each $\Delta^{a\rightarrow v}$, leads to different $\mathcal{I}^{+}_{a\rightarrow v}$, and $\mathcal{I}^{-}_{a\rightarrow v}$ measures. The influence sphere is defined a set of vertices, controlled by the threshold score $\rho$. For any given $\rho$, given two distinct perturbation $\Delta^{a\rightarrow v}$, and $\Delta^{b\rightarrow u}$. A distance measure can be defined as 
+Each network perturbation ($\Delta^{a\rightarrow v}$), results in describes two distinct influence sphere $\mathcal{I}^{+}_{a\rightarrow v}$, and $\mathcal{I}^{-}_{a\rightarrow v}$. The influence sphere describes a set of vertices, and controlled by the threshold score $\rho$.
+\par
+For any given $\rho$, and two distinct perturbation $\Delta^{a\rightarrow v}$, and $\Delta^{b\rightarrow u}$, a distance measure can be defined as 
 \begin{equation*}
     \lambda_{+}( \Delta^{a\rightarrow v}, \Delta^{b\rightarrow u} \vert \rho, G, \phi) = \dfrac{\mathcal{I}^{+}_{a\rightarrow v}(\rho \vert G, \phi) \Delta \mathcal{I}^{+}_{b\rightarrow u}(\rho \vert G, \phi)}{\mathcal{I}^{+}_{a\rightarrow v}(\rho \vert G, \phi) \cup \mathcal{I}^{+}_{b\rightarrow u}(\rho \vert G, \phi)}
 \end{equation*}
@@ -133,11 +135,11 @@ Each $\Delta^{a\rightarrow v}$, leads to different $\mathcal{I}^{+}_{a\rightarro
     \lambda_{-}( \Delta^{a\rightarrow v}, \Delta^{b\rightarrow u} \vert \rho, G, \phi) = \dfrac{\mathcal{I}^{-}_{a\rightarrow v}(\rho \vert G, \phi) \Delta \mathcal{I}^{-}_{b\rightarrow u}(\rho \vert G, \phi)}{\mathcal{I}^{-}_{a\rightarrow v}(\rho \vert G, \phi) \cup \mathcal{I}^{-}_{b\rightarrow u}(\rho \vert G, \phi)}
 \end{equation*}
 
-$\lambda_{+}$ is $0$, when both $\mathcal{I}^{+}_{a\rightarrow v}$, and $\mathcal{I}^{+}_{b\rightarrow u}$, are exactly same, and $1$ when they are very distinct. $\lambda_{+}$, and $\lambda_{-}$ are two distinct distance measure. A symmetric distance measure can be defined by taking the maximum of two values.
+$\lambda_{+}$ is $0$, when both $\mathcal{I}^{+}_{a\rightarrow v}$, and $\mathcal{I}^{+}_{b\rightarrow u}$, are exactly same, and $1$ when they are completely distinct. $\lambda_{+}$, and $\lambda_{-}$ are two distinct distance measures. A symmetric distance measure is defined by taking the maximum of two values.
 \begin{equation*}
     \lambda_{s}(\Delta^{a\rightarrow v}, \Delta^{b\rightarrow u}\vert \rho, G, \phi) = \max (\lambda_{+}( \Delta^{a\rightarrow v}, \Delta^{b\rightarrow u} \vert \rho) , \lambda_{-}( \Delta^{a\rightarrow v}, \Delta^{b\rightarrow u} \vert \rho) )
 \end{equation*}
-$\lambda_{s}$ is a point measure for a given $\rho$ value. For different $\rho$ value is produces different result, as the definition of influence sphere changes as a function of $\rho$. Thus the distance between perturbation is deined as 
+$\lambda_{s}$ is a point measure for a given $\rho$ value. As different value of $\rho$ produces different influence sphere definition, a unique distance measure is defined as the maximum distance over all $\rho$ values.
 \begin{equation*}
     \lambda(\Delta^{a\rightarrow v}, \Delta^{b\rightarrow u}\vert G,\phi) = \max_{\rho} \lambda_{s}(\Delta^{a\rightarrow v}, \Delta^{b\rightarrow u}\vert \rho, G, \phi)
 \end{equation*}
